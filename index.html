@@ -1,0 +1,393 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#07111d">
+  <title>NashSecurity | امنیت هوشمند</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;500;600;700;800&display=swap');
+
+    :root {
+      --bg: #07111d;
+      --panel: rgba(15, 31, 48, .78);
+      --text: #f2f7fb;
+      --muted: #a7b8c8;
+      --cyan: #45e5d0;
+      --blue: #69a8ff;
+      --border: rgba(255,255,255,.12);
+    }
+
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      color: var(--text);
+      background: var(--bg);
+      font-family: "Vazirmatn", sans-serif;
+    }
+    a { color: inherit; text-decoration: none; }
+    button { font: inherit; }
+
+    .nav {
+      position: fixed;
+      z-index: 10;
+      top: 16px;
+      left: 5%;
+      right: 5%;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 12px 20px;
+      border: 1px solid var(--border);
+      border-radius: 18px;
+      background: rgba(5, 15, 25, .72);
+      backdrop-filter: blur(16px);
+    }
+    .brand { font-weight: 800; letter-spacing: -.5px; }
+    .brand span { color: var(--cyan); }
+    .nav-links { display: flex; gap: 22px; color: var(--muted); font-size: 14px; }
+    .nav-links a:hover { color: white; }
+    .nav-cta, .button {
+      border: 0;
+      border-radius: 12px;
+      padding: 10px 17px;
+      color: #041410;
+      background: var(--cyan);
+      font-weight: 700;
+      cursor: pointer;
+    }
+
+    .scene {
+      min-height: 100vh;
+      position: relative;
+      display: grid;
+      place-items: center;
+      overflow: hidden;
+      padding: 120px 7vw 70px;
+      isolation: isolate;
+    }
+    .scene::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      z-index: -2;
+      background:
+        radial-gradient(ellipse at 50% 100%, rgba(21,95,131,.48), transparent 48%),
+        linear-gradient(180deg, #07111d 0%, #0b1c2c 55%, #07111d 100%);
+    }
+    .scene::after {
+      content: "";
+      position: absolute;
+      z-index: -1;
+      width: 70vw;
+      height: 70vw;
+      border-radius: 50%;
+      background: rgba(36, 211, 195, .08);
+      filter: blur(90px);
+      top: 10%;
+      left: -25%;
+    }
+
+    .hero { text-align: center; }
+    .eyebrow {
+      display: inline-block;
+      color: var(--cyan);
+      border: 1px solid rgba(69,229,208,.3);
+      background: rgba(69,229,208,.07);
+      border-radius: 99px;
+      padding: 7px 14px;
+      font-size: 13px;
+    }
+    h1 { font-size: clamp(38px, 7vw, 78px); line-height: 1.2; margin: 20px 0; }
+    h1 span { color: var(--cyan); }
+    .lead { max-width: 650px; margin: 0 auto 28px; color: var(--muted); line-height: 2; }
+    .hero-actions { display: flex; justify-content: center; gap: 12px; flex-wrap: wrap; }
+    .button.secondary {
+      color: var(--text);
+      background: rgba(255,255,255,.08);
+      border: 1px solid var(--border);
+    }
+
+    .city {
+      position: relative;
+      width: min(900px, 95vw);
+      height: 280px;
+      margin: 58px auto 0;
+      display: flex;
+      align-items: end;
+      justify-content: center;
+      gap: 12px;
+      perspective: 700px;
+    }
+    .tower {
+      width: 12%;
+      border: 1px solid rgba(108,205,255,.32);
+      border-radius: 8px 8px 0 0;
+      background:
+        repeating-linear-gradient(0deg, transparent 0 22px, rgba(69,229,208,.35) 23px 25px),
+        repeating-linear-gradient(90deg, transparent 0 20px, rgba(105,168,255,.2) 21px 23px),
+        linear-gradient(160deg, #16344b, #081522);
+      box-shadow: 0 0 35px rgba(69,229,208,.12);
+      transform: rotateY(-8deg);
+    }
+    .tower:nth-child(1) { height: 43%; }
+    .tower:nth-child(2) { height: 66%; }
+    .tower:nth-child(3) { height: 88%; width: 17%; }
+    .tower:nth-child(4) { height: 59%; }
+    .tower:nth-child(5) { height: 74%; }
+    .tower:nth-child(6) { height: 48%; }
+    .city-label {
+      position: absolute;
+      bottom: 18px;
+      right: 5%;
+      color: var(--cyan);
+      font-size: 12px;
+      background: rgba(4,15,24,.8);
+      padding: 8px 12px;
+      border-radius: 99px;
+    }
+
+    .content { width: min(1120px, 100%); margin: auto; }
+    .section-title { font-size: clamp(30px, 4vw, 48px); margin: 12px 0; }
+    .section-desc { color: var(--muted); line-height: 1.9; max-width: 650px; }
+    .grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; margin-top: 34px; }
+    .card {
+      padding: 24px;
+      border: 1px solid var(--border);
+      border-radius: 22px;
+      background: var(--panel);
+      box-shadow: 0 20px 50px rgba(0,0,0,.18);
+      transition: transform .25s, border-color .25s;
+    }
+    .card:hover { transform: translateY(-7px); border-color: rgba(69,229,208,.55); }
+    .icon { font-size: 32px; }
+    .card h3 { margin: 12px 0 8px; }
+    .card p { color: var(--muted); line-height: 1.8; font-size: 14px; }
+    .price { color: var(--cyan); font-size: 14px; font-weight: 700; }
+    .product-art {
+      height: 140px;
+      display: grid;
+      place-items: center;
+      margin: -4px -4px 12px;
+      border-radius: 16px;
+      background: radial-gradient(circle, rgba(69,229,208,.16), rgba(4,14,24,.2) 65%);
+      font-size: 68px;
+    }
+    .tag {
+      display: inline-block;
+      padding: 4px 9px;
+      border-radius: 99px;
+      background: rgba(105,168,255,.12);
+      color: #9dc6ff;
+      font-size: 11px;
+    }
+
+    .dashboard {
+      margin-top: 34px;
+      border: 1px solid var(--border);
+      border-radius: 24px;
+      padding: 22px;
+      background: linear-gradient(135deg, rgba(15,31,48,.95), rgba(9,25,38,.85));
+      box-shadow: 0 25px 70px rgba(0,0,0,.3);
+    }
+    .dash-top { display: flex; justify-content: space-between; gap: 15px; align-items: center; }
+    .status { color: var(--cyan); font-size: 13px; }
+    .stats { display: grid; grid-template-columns: repeat(3,1fr); gap: 12px; margin-top: 18px; }
+    .stat { padding: 18px; background: rgba(255,255,255,.045); border-radius: 16px; }
+    .stat small { color: var(--muted); }
+    .stat strong { display: block; font-size: 25px; margin-top: 7px; }
+    .bar { height: 8px; background: #1b3446; border-radius: 9px; margin-top: 14px; overflow: hidden; }
+    .bar i { display: block; height: 100%; width: 72%; background: var(--cyan); border-radius: inherit; }
+
+    .story { min-height: 65vh; }
+    .story-card {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 30px;
+      align-items: center;
+      margin-top: 30px;
+      padding: 28px;
+      border: 1px solid var(--border);
+      border-radius: 26px;
+      background: var(--panel);
+    }
+    .story-visual {
+      min-height: 240px;
+      display: grid;
+      place-items: center;
+      border-radius: 20px;
+      font-size: 90px;
+      background: radial-gradient(circle at 50% 50%, rgba(69,229,208,.22), rgba(9,23,37,.35) 65%);
+    }
+    .story-card p { color: var(--muted); line-height: 2; }
+
+    footer { padding: 35px 7vw; text-align: center; color: var(--muted); border-top: 1px solid var(--border); }
+
+    .reveal { opacity: 0; transform: translateY(24px); transition: .7s ease; }
+    .reveal.visible { opacity: 1; transform: translateY(0); }
+
+    @media (max-width: 760px) {
+      .nav { left: 3%; right: 3%; }
+      .nav-links { display: none; }
+      .scene { padding-inline: 5vw; }
+      .grid { grid-template-columns: 1fr; }
+      .story-card { grid-template-columns: 1fr; }
+      .story-visual { min-height: 180px; }
+      .stats { grid-template-columns: 1fr; }
+      .city { height: 190px; }
+    }
+  </style>
+</head>
+<body>
+  <nav class="nav">
+    <a class="brand" href="#home">Nash<span>Security</span></a>
+    <div class="nav-links">
+      <a href="#software">نرم‌افزار</a>
+      <a href="#shop">فروشگاه</a>
+      <a href="#stories">بلاگ</a>
+      <a href="#pricing">تعرفه‌ها</a>
+    </div>
+    <a class="nav-cta" href="#shop">مشاهده محصولات</a>
+  </nav>
+
+  <main>
+    <section class="scene hero" id="home">
+      <div>
+        <span class="eyebrow">امنیت هوشمند، یک قدم جلوتر</span>
+        <h1>شهر امن‌تر، با <span>فناوری هوشمند</span></h1>
+        <p class="lead">
+          دوربین‌ها، کنترل دسترسی و نرم‌افزار مدیریت امنیت را در یک تجربه‌ی یکپارچه ببینید.
+          از تشخیص رویداد تا گزارش‌گیری، همه‌چیز در یک جا.
+        </p>
+        <div class="hero-actions">
+          <a class="button" href="#software">آشنایی با نرم‌افزار</a>
+          <a class="button secondary" href="#shop">رفتن به فروشگاه</a>
+        </div>
+        <div class="city" aria-label="نمای گرافیکی شهر هوشمند">
+          <div class="tower"></div><div class="tower"></div><div class="tower"></div>
+          <div class="tower"></div><div class="tower"></div><div class="tower"></div>
+          <span class="city-label">● شبکه‌ی امنیت هوشمند فعال است</span>
+        </div>
+      </div>
+    </section>
+
+    <section class="scene" id="software">
+      <div class="content reveal">
+        <span class="eyebrow">مرکز کنترل امنیت</span>
+        <h2 class="section-title">همه‌ی سیستم‌ها، یک تصویر روشن</h2>
+        <p class="section-desc">
+          نرم‌افزار NashSecurity برای مدیریت دوربین‌ها، ثبت رویدادها و گزارش ورود و خروج طراحی شده است.
+          این بخش فعلاً نمایشی است و به دستگاه واقعی متصل نیست.
+        </p>
+        <div class="dashboard">
+          <div class="dash-top">
+            <strong>داشبورد امنیت</strong>
+            <span class="status">● همه‌ی سامانه‌ها آنلاین</span>
+          </div>
+          <div class="stats">
+            <div class="stat"><small>دوربین‌های فعال</small><strong>24</strong><div class="bar"><i></i></div></div>
+            <div class="stat"><small>رویدادهای امروز</small><strong>08</strong><div class="bar"><i style="width:42%"></i></div></div>
+            <div class="stat"><small>ورودهای ثبت‌شده</small><strong>136</strong><div class="bar"><i style="width:86%"></i></div></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="scene" id="shop">
+      <div class="content reveal">
+        <span class="eyebrow">فروشگاه تجهیزات</span>
+        <h2 class="section-title">تجهیزات مناسب برای هر فضا</h2>
+        <p class="section-desc">چند محصول نمونه برای نمایش ظاهر فروشگاه؛ قیمت و موجودی را بعداً می‌توانی عوض کنی.</p>
+        <div class="grid">
+          <article class="card">
+            <div class="product-art">📷</div>
+            <span class="tag">دوربین نظارتی</span>
+            <h3>دوربین هوشمند 4K</h3>
+            <p>مناسب محیط‌های داخلی و تجاری، با دید در شب و تشخیص حرکت.</p>
+            <div class="price">قیمت: تماس بگیرید</div>
+          </article>
+          <article class="card">
+            <div class="product-art">🗄️</div>
+            <span class="tag">سرور و ذخیره‌سازی</span>
+            <h3>سرور مدیریت تصاویر</h3>
+            <p>راهکار ذخیره‌سازی و مدیریت تصویر برای سامانه‌های نظارتی.</p>
+            <div class="price">قیمت: تماس بگیرید</div>
+          </article>
+          <article class="card">
+            <div class="product-art">🔐</div>
+            <span class="tag">کنترل دسترسی</span>
+            <h3>سیستم کنترل ورود</h3>
+            <p>مدیریت دسترسی افراد و نگهداری گزارش‌های ورود و خروج.</p>
+            <div class="price">قیمت: تماس بگیرید</div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="scene story" id="stories">
+      <div class="content reveal">
+        <span class="eyebrow">مجله‌ی NashSecurity</span>
+        <h2 class="section-title">داستان‌های امنیت هوشمند</h2>
+        <p class="section-desc">مقاله‌ها را می‌توان به شکل کارت‌های کوتاه و جذاب نمایش داد؛ هر کارت به مقاله‌ی کامل وصل می‌شود.</p>
+        <div class="grid">
+          <article class="card">
+            <span class="tag">راهنمای خرید</span>
+            <h3>برای محل کار چه دوربینی انتخاب کنیم؟</h3>
+            <p>مهم‌ترین نکته‌ها درباره‌ی کیفیت تصویر، زاویه‌ی دید و محل نصب.</p>
+            <a class="price" href="#contact">خواندن داستان ←</a>
+          </article>
+          <article class="card">
+            <span class="tag">امنیت هوشمند</span>
+            <h3>از تصویر دوربین تا گزارش قابل استفاده</h3>
+            <p>چطور مدیریت رویدادها می‌تواند بررسی اتفاق‌ها را ساده‌تر کند.</p>
+            <a class="price" href="#contact">خواندن داستان ←</a>
+          </article>
+          <article class="card">
+            <span class="tag">کسب‌وکار</span>
+            <h3>چک‌لیست امنیتی دفتر کار</h3>
+            <p>یک نگاه ساده به دوربین، کنترل دسترسی و نگهداری اطلاعات.</p>
+            <a class="price" href="#contact">خواندن داستان ←</a>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="scene" id="pricing">
+      <div class="content reveal">
+        <span class="eyebrow">دفتر کار دیجیتال</span>
+        <h2 class="section-title">نرم‌افزار متناسب با نیازتان</h2>
+        <div class="story-card">
+          <div>
+            <span class="tag">اشتراک نرم‌افزار</span>
+            <h3>مدیریت ساده‌تر، دید کامل‌تر</h3>
+            <p>
+              تعرفه‌ی ماهانه می‌تواند بر اساس تعداد دوربین‌ها، تعداد کاربران و امکانات موردنیاز تعیین شود.
+              برای دریافت قیمت دقیق، با تیم فروش تماس بگیرید.
+            </p>
+            <a class="button" href="mailto:hello@nashsecurity.example">درخواست مشاوره</a>
+          </div>
+          <div class="story-visual">🖥️</div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer id="contact">
+    © NashSecurity — راهکارهای امنیت هوشمند
+  </footer>
+
+  <script>
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add("visible");
+          observer.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.12 });
+
+    document.querySelectorAll(".reveal").forEach((section) => observer.observe(section));
+  </script>
+</body>
+</html>
